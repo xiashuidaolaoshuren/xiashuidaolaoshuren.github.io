@@ -27,12 +27,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
     <Card className="overflow-hidden">
       <div className="flex flex-col md:flex-row">
         {/* Image Section */}
-        <div className="w-full md:w-1/3 bg-muted aspect-video md:aspect-auto relative group">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted md:w-1/3">
           {project.image ? (
             <img
               src={project.image}
               alt={project.title}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="h-full w-full object-contain object-center"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">

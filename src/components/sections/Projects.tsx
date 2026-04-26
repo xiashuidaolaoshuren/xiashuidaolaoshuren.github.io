@@ -4,19 +4,19 @@ import { ProjectCard } from "./ProjectCard";
 const projects: ProjectItem[] = [
   {
     title: "LLM Hallucination Mitigation (Final Year Project)",
-    status: "In Progress",
+    status: "Completed",
     description: "My Final Year Project (FYP) focused on researching and implementing trainless verifier methods for detecting and mitigating hallucinations in Large Language Models (LLMs) within RAG systems.",
     repoUrl: "https://github.com/xiashuidaolaoshuren/AIST-FYP",
     techStack: ["Python", "PyTorch", "Transformers", "RAG", "NLI"],
-    image: "https://placehold.co/600x400/png?text=Final+Year+Project",
+    image: "../../../images/fyp.jpg",
   },
   {
     title: "AllergyGuard",
-    status: "In Progress",
+    status: "Completed",
     description: "An Android application designed for travelers to scan food labels and menus. It uses on-device OCR and fuzzy string matching to identify allergens in real-time.",
     repoUrl: "https://github.com/xiashuidaolaoshuren/allergy_guard",
     techStack: ["Kotlin", "Android", "ML Kit", "OCR", "Room"],
-    image: "https://placehold.co/600x400/png?text=AllergyGuard",
+    image: "../../../images/allergy_guard.png",
   },
   {
     title: "GTA V ALPR",
@@ -40,7 +40,7 @@ const projects: ProjectItem[] = [
     description: "Real-time hand gesture recognition system for music synthesis control. Uses MediaPipe for tracking and sends OSC signals to SuperCollider for audio generation.",
     repoUrl: "https://github.com/xiashuidaolaoshuren/AIST_2010_Proj",
     techStack: ["Python", "MediaPipe", "SuperCollider", "OpenCV", "OSC"],
-    image: "https://placehold.co/600x400/png?text=Gesture+Music+Controller",
+    image: "../../../images/gesture_music_controller.jpg",
   },
 ];
 
