@@ -25,8 +25,10 @@ export function ExperienceCard({ item }: ExperienceCardProps) {
   const cardBody = (
     <Card
       className={cn(
-        "transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-xl",
-        isLink && "group-hover:-translate-y-1 group-hover:shadow-xl cursor-pointer"
+        "border border-transparent transition-[transform,box-shadow,border-color] duration-300 ease-out",
+        "hover:-translate-y-1 hover:shadow-xl hover:border-primary/50",
+        isLink &&
+          "group-hover:-translate-y-1 group-hover:shadow-xl group-hover:border-primary/50 cursor-pointer"
       )}
     >
       <CardHeader>

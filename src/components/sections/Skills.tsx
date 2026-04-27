@@ -60,7 +60,11 @@ export function Skills() {
               <h3 className="text-xl font-semibold mb-4">{category.title}</h3>
               <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill) => (
-                  <Badge key={skill} variant="secondary" className="text-sm py-1 px-3">
+                  <Badge
+                    key={skill}
+                    variant="secondary"
+                    className="border-primary/20 bg-primary/10 py-1 px-3 text-sm font-medium text-primary hover:bg-primary/15"
+                  >
                     {skill}
                   </Badge>
                 ))}
