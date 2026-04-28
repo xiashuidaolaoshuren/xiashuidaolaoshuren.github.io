@@ -3,9 +3,6 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
-import { applyThemeToDocument, resolveTheme } from '@/lib/theme'
-
-applyThemeToDocument(resolveTheme())
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

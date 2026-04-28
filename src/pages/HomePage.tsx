@@ -6,7 +6,7 @@ import { Skills } from "@/components/sections/Skills";
 
 export function HomePage() {
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-10 lg:px-14 xl:px-20">
+    <div className="w-full max-w-8xl mx-auto px-64">
       <Hero />
       <div id="bio"><Bio /></div>
       <div id="education"><Education /></div>

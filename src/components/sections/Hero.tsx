@@ -1,9 +1,6 @@
-import { sectionEnterClass } from "@/lib/section-motion"
-import { cn } from "@/lib/utils"
-
 export function Hero() {
   return (
-    <section className={cn("py-12 text-center", sectionEnterClass())}>
+    <section className="py-10 text-center">
       <h1 className="text-4xl font-bold mb-4">
         <span className="inline-block bg-linear-to-r from-primary to-indigo-400 bg-clip-text text-transparent">
           Hi, Nice to meet you!
