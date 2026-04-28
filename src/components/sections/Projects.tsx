@@ -1,3 +1,5 @@
+import { sectionEnterClass } from "@/lib/section-motion"
+import { cn } from "@/lib/utils"
 import type { ProjectItem } from "./ProjectCard";
 import { ProjectCard } from "./ProjectCard";
 
@@ -46,7 +48,7 @@ const projects: ProjectItem[] = [
 
 export function Projects() {
   return (
-    <section className="py-12">
+    <section className={cn("py-12", sectionEnterClass("delay-100"))}>
       <h2 className="text-3xl font-bold mb-6">Projects</h2>
       <div className="flex flex-col gap-6">
         {projects.map((project, index) => (

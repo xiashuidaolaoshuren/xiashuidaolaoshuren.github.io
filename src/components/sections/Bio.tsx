@@ -1,6 +1,9 @@
+import { sectionEnterClass } from "@/lib/section-motion"
+import { cn } from "@/lib/utils"
+
 export function Bio() {
   return (
-    <section className="py-12">
+    <section className={cn("py-12", sectionEnterClass("delay-75"))}>
       <h2 className="text-3xl font-bold mb-6">Biography</h2>
       <div className="prose dark:prose-invert">
         <div>

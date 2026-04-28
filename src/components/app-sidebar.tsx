@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/ThemeToggle"
 
 // Menu items.
 const items = [
@@ -121,21 +122,22 @@ export function AppSidebar() {
               </div>
               
               {/* Social buttons in a row */}
-              <div className="flex gap-4 pt-2">
+              <div className="flex flex-wrap gap-3 pt-2">
                 {socialLinks.map((social) => (
                   <Button
                     key={social.name}
+                    variant="outline"
                     size="icon"
-                    className="size-11"
+                    className="size-11 shrink-0 border-primary/25 bg-primary/10 text-primary shadow-sm hover:border-primary/40 hover:bg-primary/20 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
                     asChild
                   >
-                    <a 
-                      href={social.url} 
-                      target="_blank" 
+                    <a
+                      href={social.url}
+                      target="_blank"
                       rel="noopener noreferrer"
                       title={social.name}
                     >
-                      <social.icon className="size-5 text-white" />
+                      <social.icon className="size-5" aria-hidden />
                     </a>
                   </Button>
                 ))}
@@ -144,7 +146,8 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border p-3">
+        <ThemeToggle />
       </SidebarFooter>
     </Sidebar>
   )
