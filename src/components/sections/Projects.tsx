@@ -1,3 +1,5 @@
+import { sectionEnterClass } from "@/lib/section-motion"
+import { cn } from "@/lib/utils"
 import type { ProjectItem } from "./ProjectCard";
 import { ProjectCard } from "./ProjectCard";
 
@@ -40,13 +42,13 @@ const projects: ProjectItem[] = [
     description: "Real-time hand gesture recognition system for music synthesis control. Uses MediaPipe for tracking and sends OSC signals to SuperCollider for audio generation.",
     repoUrl: "https://github.com/xiashuidaolaoshuren/AIST_2010_Proj",
     techStack: ["Python", "MediaPipe", "SuperCollider", "OpenCV", "OSC"],
-    image: "../../../images/gesture_music_controller.jpg",
+    image: "../../../images/hand_gesture.jpg",
   },
 ];
 
 export function Projects() {
   return (
-    <section className="py-12">
+    <section className={cn("py-12", sectionEnterClass("delay-100"))}>
       <h2 className="text-3xl font-bold mb-6">Projects</h2>
       <div className="flex flex-col gap-6">
         {projects.map((project, index) => (

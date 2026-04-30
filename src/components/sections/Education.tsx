@@ -1,3 +1,5 @@
+import { sectionEnterClass } from "@/lib/section-motion"
+import { cn } from "@/lib/utils"
 import { ExperienceCard, type ExperienceItem } from "./ExperienceCard";
 
 const educationData: ExperienceItem[] = [
@@ -29,7 +31,7 @@ const educationData: ExperienceItem[] = [
 
 export function Education() {
   return (
-    <section className="py-12">
+    <section className={cn("py-12", sectionEnterClass("delay-150"))}>
       <h2 className="text-3xl font-bold mb-6">Education</h2>
       <div className="space-y-6">
         {educationData.map((item, index) => (

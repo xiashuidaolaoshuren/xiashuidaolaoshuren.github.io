@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider defaultOpen={true} style={{ "--sidebar-width": "20rem" } as React.CSSProperties}>
       <AppSidebar />
-      <main className="flex-1 relative overflow-auto ml-[var(--sidebar-width)]">
+      <main className="relative ml-[var(--sidebar-width)] h-screen flex-1 overflow-x-hidden overflow-y-auto [scrollbar-gutter:stable]">
         {children}
       </main>
     </SidebarProvider>

@@ -1,5 +1,6 @@
-import { Home, User, GraduationCap, FolderGit2, Mail, Linkedin, Github, Phone, Instagram } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Home, FolderGit2, Mail, Linkedin, Github, Phone, Instagram } from "lucide-react"
+import { NavLink, useLocation } from "react-router-dom"
+import { cn } from "@/lib/utils"
 import {
   Sidebar,
   SidebarContent,
@@ -13,6 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/ThemeToggle"
 
 // Menu items.
 const items = [
@@ -46,7 +48,14 @@ const socialLinks = [
   },
 ]
 
+function isNavItemActive(pathname: string, url: string) {
+  if (url === "/") return pathname === "/"
+  return pathname === url || pathname.startsWith(`${url}/`)
+}
+
 export function AppSidebar() {
+  const location = useLocation()
+
   return (
     <Sidebar collapsible="none" className="shadow-lg fixed top-0 left-0 h-screen rounded-lg w-[19.2rem]">
       <SidebarHeader>
@@ -71,16 +80,28 @@ export function AppSidebar() {
           <SidebarGroupLabel className="pl-[calc(0.5rem+1rem+0.5rem)] text-sm">Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="text-base [&>svg]:size-5">
-                    <Link to={item.url}>
-                      <item.icon className="text-primary"/>
-                      <span className="text-primary">{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {items.map((item) => {
+                const active = isNavItemActive(location.pathname, item.url)
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={active}
+                      className={cn(
+                        "text-base text-sidebar-foreground [&>svg]:size-5 [&>svg]:text-sidebar-foreground",
+                        "data-[active=true]:bg-primary/10 data-[active=true]:text-primary",
+                        "data-[active=true]:[&>svg]:text-primary data-[active=true]:font-semibold",
+                        "hover:text-sidebar-accent-foreground"
+                      )}
+                    >
+                      <NavLink to={item.url} end={item.url === "/"}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -101,21 +122,22 @@ export function AppSidebar() {
               </div>
               
               {/* Social buttons in a row */}
-              <div className="flex gap-4 pt-2">
+              <div className="flex flex-wrap gap-3 pt-2">
                 {socialLinks.map((social) => (
                   <Button
                     key={social.name}
+                    variant="outline"
                     size="icon"
-                    className="size-11"
+                    className="size-11 shrink-0 border-primary/25 bg-primary/10 text-primary shadow-sm hover:border-primary/40 hover:bg-primary/20 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
                     asChild
                   >
-                    <a 
-                      href={social.url} 
-                      target="_blank" 
+                    <a
+                      href={social.url}
+                      target="_blank"
                       rel="noopener noreferrer"
                       title={social.name}
                     >
-                      <social.icon className="size-5 text-white" />
+                      <social.icon className="size-5" aria-hidden />
                     </a>
                   </Button>
                 ))}
@@ -124,7 +146,8 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border p-3">
+        <ThemeToggle />
       </SidebarFooter>
     </Sidebar>
   )

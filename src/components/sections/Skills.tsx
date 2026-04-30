@@ -1,3 +1,5 @@
+import { sectionEnterClass } from "@/lib/section-motion"
+import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge";
 
 interface SkillCategory {
@@ -49,8 +51,8 @@ function LanguageRating({ level }: { readonly level: number }) {
 
 export function Skills() {
   return (
-    <section className="py-12">
-      <h2 className="text-3xl font-bold mb-8">Skills</h2>
+    <section className={cn("py-12", sectionEnterClass("delay-300"))}>
+      <h2 className="text-3xl font-bold mb-6">Skills</h2>
       
       <div className="grid gap-8 md:grid-cols-2">
         {/* Technical & Soft Skills */}
@@ -60,7 +62,11 @@ export function Skills() {
               <h3 className="text-xl font-semibold mb-4">{category.title}</h3>
               <div className="flex flex-wrap gap-2">
                 {category.skills.map((skill) => (
-                  <Badge key={skill} variant="secondary" className="text-sm py-1 px-3">
+                  <Badge
+                    key={skill}
+                    variant="secondary"
+                    className="border-primary/20 bg-primary/10 py-1 px-3 text-sm font-medium text-primary hover:bg-primary/15"
+                  >
                     {skill}
                   </Badge>
                 ))}

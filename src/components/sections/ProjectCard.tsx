@@ -29,9 +29,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const cardBody = (
     <Card
       className={cn(
-        "overflow-hidden transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-xl",
+        "overflow-hidden border border-transparent transition-[transform,box-shadow,border-color] duration-300 ease-out",
+        "hover:-translate-y-1 hover:shadow-xl hover:border-primary/50",
         isLink &&
-          "group-hover:-translate-y-1 group-hover:shadow-xl cursor-pointer"
+          "group-hover:-translate-y-1 group-hover:shadow-xl group-hover:border-primary/50 cursor-pointer"
       )}
     >
       <div className="flex flex-col md:flex-row">
@@ -64,7 +65,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 {isLink ? (
                   <>
                     <Github
-                      className="h-5 w-5 shrink-0 text-muted-foreground"
+                      className="h-5 w-5 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
                       aria-hidden
                     />
                     <span className="sr-only">GitHub repository</span>
@@ -82,7 +83,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
             {project.techStack && (
               <div className="mt-1 flex flex-wrap gap-1">
                 {project.techStack.map((tech) => (
-                  <Badge key={tech} variant="outline" className="text-xs">
+                  <Badge
+                    key={tech}
+                    variant="outline"
+                    className="border-primary/25 bg-primary/10 text-xs text-primary hover:bg-primary/15"
+                  >
                     {tech}
                   </Badge>
                 ))}
