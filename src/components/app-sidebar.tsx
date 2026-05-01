@@ -1,4 +1,4 @@
-import { Home, FolderGit2, Mail, Linkedin, Github, Phone, Instagram } from "lucide-react"
+import { Home, FolderGit2, Mail, Linkedin, Github, Phone, Instagram, Download } from "lucide-react"
 import { NavLink, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import {
@@ -57,13 +57,17 @@ export function AppSidebar() {
   const location = useLocation()
 
   return (
-    <Sidebar collapsible="none" className="shadow-lg fixed top-0 left-0 h-screen rounded-lg w-[19.2rem]">
-      <SidebarHeader>
-        <div className="flex justify-center">
-          <h2 className="text-xl font-semibold">Felix's Blog</h2>
+    <Sidebar
+      collapsible="none"
+      className="sidebar-ambient fixed left-0 top-0 h-screen w-[19.2rem] rounded-lg border-r border-sidebar-border/80 shadow-lg"
+    >
+      <SidebarHeader className="sidebar-header-identity border-b border-sidebar-border/70 px-4 pb-4 pt-5">
+        <div className="flex flex-col items-center gap-0.5 text-center">
+          <h2 className="text-lg font-semibold tracking-tight text-sidebar-foreground">Felix So</h2>
+          <p className="text-xs leading-snug text-muted-foreground">AI Student · CUHK</p>
         </div>
       </SidebarHeader>
-      
+
       {/* Avatar Section */}
       <div className="flex justify-center py-4">
         <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-border shadow-md">
@@ -88,10 +92,10 @@ export function AppSidebar() {
                       asChild
                       isActive={active}
                       className={cn(
-                        "text-base text-sidebar-foreground [&>svg]:size-5 [&>svg]:text-sidebar-foreground",
-                        "data-[active=true]:bg-primary/10 data-[active=true]:text-primary",
-                        "data-[active=true]:[&>svg]:text-primary data-[active=true]:font-semibold",
-                        "hover:text-sidebar-accent-foreground"
+                        "rounded-md border-l-2 border-transparent pl-[calc(0.5rem-1px)] text-base text-sidebar-foreground transition-[border-color,background-color,box-shadow,color] duration-200 [&>svg]:size-5 [&>svg]:text-sidebar-foreground",
+                        "hover:border-primary/15 hover:bg-sidebar-accent/80 hover:text-sidebar-accent-foreground",
+                        "data-[active=true]:border-primary data-[active=true]:bg-primary/12 data-[active=true]:text-primary data-[active=true]:shadow-sm",
+                        "data-[active=true]:[&>svg]:text-primary data-[active=true]:font-semibold"
                       )}
                     >
                       <NavLink to={item.url} end={item.url === "/"}>
@@ -120,6 +124,17 @@ export function AppSidebar() {
                 <Phone className="size-5" />
                 <span className="text-muted-foreground text-[15px]">+852 66710279</span>
               </div>
+
+              <Button
+                asChild
+                variant="outline"
+                className="w-full justify-start gap-2 border-primary/25 bg-primary/10 text-primary shadow-sm hover:border-primary/40 hover:bg-primary/20 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <a href="/cv.pdf" target="_blank" rel="noopener noreferrer" download>
+                  <Download className="size-5 shrink-0" aria-hidden />
+                  Download CV
+                </a>
+              </Button>
               
               {/* Social buttons in a row */}
               <div className="flex flex-wrap gap-3 pt-2">

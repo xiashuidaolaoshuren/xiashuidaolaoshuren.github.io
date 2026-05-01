@@ -55,15 +55,13 @@
   --sidebar-accent-foreground: oklch(0.25 0.08 260);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.6 0.15 260);
-}
 
-a {
-  font-weight: 500;
-  color: oklch(0.52 0.18 260);
-  text-decoration: inherit;
-}
-a:hover {
-  color: oklch(0.45 0.2 260);
+  /* Ambient page backdrop (light) */
+  --ambient-orbit: oklch(0.58 0.14 264 / 0.14);
+  --ambient-corner: oklch(0.62 0.1 280 / 0.09);
+  --ambient-fade-top: oklch(0.97 0.04 260 / 0.55);
+  --ambient-grid-line: oklch(0.55 0.06 260 / 0.055);
+  --ambient-float: oklch(0.58 0.12 264 / 0.12);
 }
 
 body {
@@ -182,6 +180,13 @@ button:focus-visible {
   --sidebar-accent-foreground: oklch(0.92 0.02 260);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.7 0.15 260);
+
+  /* Ambient page backdrop (dark) */
+  --ambient-orbit: oklch(0.55 0.14 264 / 0.22);
+  --ambient-corner: oklch(0.5 0.12 280 / 0.14);
+  --ambient-fade-top: oklch(0.22 0.04 260 / 0.45);
+  --ambient-grid-line: oklch(0.98 0.02 260 / 0.045);
+  --ambient-float: oklch(0.55 0.14 264 / 0.18);
 }
 
 @layer base {
@@ -190,6 +195,16 @@ button:focus-visible {
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Default link styling (must stay in @layer base so utility text colors on <a> can override). */
+  a {
+    font-weight: 500;
+    color: oklch(0.52 0.18 260);
+    text-decoration: inherit;
+  }
+  a:hover {
+    color: oklch(0.45 0.2 260);
   }
 
   /* Sidebar width and height fixes */
@@ -212,5 +227,201 @@ button:focus-visible {
 
   [data-sidebar="content"]::-webkit-scrollbar {
     display: none; /* Chrome, Safari, and Opera */
+  }
+}
+
+@layer components {
+  /* Main content: quiet grid + soft glows (scrolls with content inside main) */
+  .ambient-main-surface {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(ellipse 120% 70% at 50% -35%, var(--ambient-orbit), transparent 52%),
+      radial-gradient(ellipse 55% 45% at 100% 0%, var(--ambient-corner), transparent 48%),
+      linear-gradient(180deg, var(--ambient-fade-top), transparent 28%),
+      repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 31px,
+        var(--ambient-grid-line) 31px,
+        var(--ambient-grid-line) 32px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 31px,
+        var(--ambient-grid-line) 31px,
+        var(--ambient-grid-line) 32px
+      );
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+    background-size:
+      100% 420px,
+      55% 320px,
+      100% 220px,
+      100% 100%,
+      100% 100%;
+    background-position: center top, right top, center top, center center, center center;
+  }
+
+  .ambient-main-surface--projects {
+    background-image:
+      radial-gradient(ellipse 100% 60% at 15% 10%, var(--ambient-corner), transparent 42%),
+      radial-gradient(ellipse 120% 70% at 50% -35%, var(--ambient-orbit), transparent 52%),
+      radial-gradient(ellipse 55% 45% at 100% 0%, var(--ambient-corner), transparent 48%),
+      linear-gradient(180deg, var(--ambient-fade-top), transparent 28%),
+      repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent 31px,
+        var(--ambient-grid-line) 31px,
+        var(--ambient-grid-line) 32px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 31px,
+        var(--ambient-grid-line) 31px,
+        var(--ambient-grid-line) 32px
+      );
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+    background-size:
+      70% 360px,
+      100% 420px,
+      55% 320px,
+      100% 220px,
+      100% 100%,
+      100% 100%;
+    background-position:
+      left top,
+      center top,
+      right top,
+      center top,
+      center center,
+      center center;
+  }
+
+  .section-eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .section-divider-gradient {
+    height: 1px;
+    width: 100%;
+    max-width: 12rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 9999px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(from var(--primary) l c h / 0.35),
+      transparent
+    );
+  }
+
+  .section-divider-gradient--start {
+    margin-left: 0;
+    margin-right: auto;
+    max-width: 10rem;
+  }
+
+  .section-hero-frame {
+    position: relative;
+    border-radius: var(--radius-xl);
+    border: 1px solid oklch(from var(--border) l c h / 0.85);
+    background: linear-gradient(
+      165deg,
+      oklch(from var(--card) l c h / 0.35) 0%,
+      transparent 55%
+    );
+    box-shadow: 0 1px 0 oklch(from var(--primary) l c h / 0.06);
+  }
+
+  @media (min-width: 640px) {
+    .section-hero-frame {
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
+  }
+
+  .section-hero-frame::before,
+  .section-hero-frame::after {
+    content: "";
+    position: absolute;
+    width: 2.25rem;
+    height: 2.25rem;
+    pointer-events: none;
+    border-color: oklch(from var(--primary) l c h / 0.22);
+    opacity: 0.9;
+  }
+
+  .section-hero-frame::before {
+    top: 0.75rem;
+    left: 0.75rem;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-top-left-radius: 0.375rem;
+  }
+
+  .section-hero-frame::after {
+    bottom: 0.75rem;
+    right: 0.75rem;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+    border-bottom-right-radius: 0.375rem;
+  }
+
+  .section-projects-frame {
+    position: relative;
+    border-radius: var(--radius-lg);
+    border: 1px solid oklch(from var(--border) l c h / 0.9);
+    background: linear-gradient(
+      180deg,
+      oklch(from var(--muted) l c h / 0.35) 0%,
+      transparent 42%
+    );
+  }
+
+  /* Sidebar: subtle tint + dot texture */
+  .sidebar-ambient {
+    background-image:
+      linear-gradient(180deg, oklch(from var(--primary) l c h / 0.07), transparent 38%),
+      radial-gradient(oklch(from var(--foreground) l c h / 0.06) 0.6px, transparent 1px);
+    background-size: auto, 14px 14px;
+    background-color: var(--sidebar);
+  }
+
+  .sidebar-header-identity {
+    background: linear-gradient(
+      180deg,
+      oklch(from var(--primary) l c h / 0.08),
+      transparent 100%
+    );
+  }
+
+  @keyframes ambient-soft-pulse {
+    0%,
+    100% {
+      opacity: 0.42;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.62;
+      transform: scale(1.03);
+    }
+  }
+
+  .ambient-motion-layer {
+    animation: ambient-soft-pulse 20s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-motion-layer {
+      animation: none;
+      opacity: 0.5;
+    }
   }
 }

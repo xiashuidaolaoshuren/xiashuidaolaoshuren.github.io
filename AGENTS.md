@@ -41,6 +41,7 @@
 - `src/lib/utils.ts`: Contains the `cn` helper.
 - `src/Layout.tsx`: Main layout wrapper.
 - `src/App.tsx`: Route definitions.
+- `docs/superpowers/specs/2026-04-30-visual-enhancement-design.md`: Baseline visual direction (ambient layering, framing, motion). When changing UI appearance, read this spec and follow the project skill **Visual design spec** in `.cursor/skills/visual-design-spec/SKILL.md`.
 
 ## Browser-based UI testing (MCP)
 
