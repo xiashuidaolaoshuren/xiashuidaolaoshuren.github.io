@@ -7,6 +7,18 @@ export interface ProjectEvidence {
   caption?: string;
 }
 
+/** Optional CSR / benchmark block for project detail (e.g. album-wise metrics). */
+export interface BenchmarkSeries {
+  name: string;
+  values: number[];
+}
+
+export interface ProjectBenchmark {
+  metricLabel: string;
+  categories: string[];
+  series: BenchmarkSeries[];
+}
+
 export interface ProjectItem {
   id: string;
   title: string;
@@ -23,6 +35,7 @@ export interface ProjectItem {
   evidence?: ProjectEvidence[];
   repoUrl: string;
   techStack?: string[];
+  benchmark?: ProjectBenchmark;
 }
 
 export const PROJECTS: ProjectItem[] = [
@@ -114,33 +127,76 @@ export const PROJECTS: ProjectItem[] = [
   },
   {
     id: "automatic-chord-recognition",
-    title: "Automatic Chord Recognition",
+    title: "Audio Chord Estimation",
     status: "Completed",
-    image: "/images/chord_recognition.png",
+    image: "/images/chord_recognition-1.png",
     summary:
-      "ML system for chord identification from audio using Random Forest and LSTM models with Librosa-based preprocessing.",
+      "MIREX 2024–style audio chord estimation simplified to chord roots: chromagram features from Beatles, Queen, and Carole King material with Isophonics annotations, comparing Random Forest to a BiLSTM.",
     overview:
-      "Explores classical vs sequence models on a music understanding task, emphasizing feature design and evaluation rather than a single black-box classifier.",
+      "Audio chord estimation segments a recording and assigns a chord label to each interval—a core Music Information Retrieval (MIR) task with applications in analysis, recommendation, and transcription. This project follows the MIREX 2024 Audio Chord Estimation problem statement but limits recognition to chord roots only (no official MIREX packaging). Tracks are drawn from commercial albums; chord intervals reference Isophonics-style ground truth, projected to roots for training and evaluation. A detector-style workflow loads audio, extracts features, trains or applies either a Random Forest or a BiLSTM, and scores predictions with Chord Symbol Recall (CSR) alongside accuracy.",
     problem:
-      "Chord recognition requires representations that capture harmonic content while remaining robust to timbre and recording noise.",
+      "Estimation must stay robust to instrumentation, mix, and residual vocals after separation. Chromagram frames exhibit repetitive temporal structure that frame-wise classifiers can misread. Labels must be aligned in time with dense features, then simplified from full chord symbols to roots. The chosen corpus is weighted toward The Beatles, which biases cross-album generalization; expanding diverse, legally sourced audio remains a practical constraint.",
     approach:
-      "Engineered audio features with Librosa, trained and compared Random Forest baselines against LSTM sequence models in PyTorch, with careful train/validation splits.",
+      "End-to-end pipeline: load MP3 with librosa, apply vocal reduction, compute CQT-based chromagrams (including librosa.features.chroma_cqt), align each frame with Isophonics interval annotations, collapse labels to chord roots, and save preprocessed training packs as CSV. Two supervised models are compared: a scikit-learn Random Forest (n_estimators=10, max_depth=10, max_features=\"log2\", random_state=42) and a PyTorch BiLSTM that performed best in tuning with learning rate 0.1, hidden dimension 128, three layers, batch size 8, and bidirectional recurrence. Models are evaluated with accuracy and CSR, including per-album CSR for the Beatles, Queen, and Carole King splits referenced in the coursework report.",
     features: [
-      "Custom preprocessing and feature pipelines",
-      "Parallel RF and RNN experimental tracks",
-      "Reproducible training scripts and metrics",
+      "Root-only labels derived from full chord strings in timed annotation files",
+      "Vocal attenuation plus chromagram / CQT feature extraction for frame-level inputs",
+      "Random Forest baseline with fixed hyperparameters for reproducible comparison",
+      "BiLSTM sequence model with tuned PyTorch settings (lr 0.1, hidden 128, 3 layers, batch 8, bidirectional)",
+      "CSV export of processed features and labels for repeatable training",
+      "CSR and accuracy reporting with album-wise breakdowns",
     ],
     results:
-      "Insight into where temporal modeling helps versus strong shallow learners, grounded in comparable preprocessing.",
+      "Album-wise numbers are in the CSR chart and table in the section titled “Chord Symbol Recall (CSR) by album”—what follows is reflection, not repeated scores. This was my first deep learning project and the first time I owned an end-to-end pipeline—from audio ingestion and labeling through training to CSR evaluation—which gave me a repeatable workflow I can build on; I consider that hands-on arc a strong foundation for continuing toward an AI-focused career. Technically, I learned that chord estimation is as much a temporal problem as a spectral one: a Random Forest is a useful baseline on isolated frames, but harmony unfolds over time, and a BiLSTM’s memory across chromagram frames better matches that structure. Implementing the BiLSTM introduced PyTorch datasets, dataloaders, and tuning in practice, which made the gap between frame-wise and sequence models tangible. Preprocessing sets much of the ceiling—residual vocals and noise limit CSR even when the architecture is reasonable—which pushed iterative vocal/noise handling after an earlier demo. On data, a Beatles-heavy corpus skews generalization; widening coverage mostly hits licensing and sourcing constraints, not just code. Richer chord representations (e.g. Harte-style ideas) were out of scope so the pipeline stayed understandable and shippable within the course timeline.",
     evidence: [
       {
-        src: "/images/chord_recognition.png",
-        alt: "Chord recognition project visual",
-        caption: "Model comparison overview",
+        src: "/images/chord_recognition-1.png",
+        alt: "Chord estimation project visualization",
+        caption:
+          "A chromagram from a section of the dataset audio.",
+      },
+      {
+        src: "/images/chord_recognition-2.png",
+        alt: "Chord Estimation Procedure",
+        caption:
+          "Chord Estimation Procedure.",
+      },
+      {
+        src: "/images/chord_recognition-3.png",
+        alt: "Sample Chord Estimation Results",
+        caption:
+          "Sample Chord Estimation Results.",
       },
     ],
     repoUrl: "https://github.com/xiashuidaolaoshuren/AIST3110_Proj",
-    techStack: ["Python", "PyTorch", "Scikit-learn", "Librosa", "RNN"],
+    techStack: [
+      "Python",
+      "NumPy",
+      "Pandas",
+      "Librosa",
+      "scikit-learn",
+      "PyTorch",
+      "BiLSTM",
+    ],
+    benchmark: {
+      metricLabel: "Chord Symbol Recall (CSR) by album",
+      categories: [
+        "Please Please Me",
+        "With the Beatles",
+        "Queen Hits I",
+        "Tapestry",
+      ],
+      series: [
+        {
+          name: "Random Forest",
+          values: [0.44, 0.49, 0.4, 0.4],
+        },
+        {
+          name: "BiLSTM",
+          values: [0.8, 0.8, 0.72, 0.69],
+        },
+      ],
+    },
   },
   {
     id: "hand-gesture-music-controller",

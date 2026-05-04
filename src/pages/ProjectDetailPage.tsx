@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Github } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ProjectBenchmarkChart } from "@/components/project/ProjectBenchmarkChart";
 import { getProjectById } from "@/data/projects";
 import { sectionEnterClass } from "@/lib/section-motion";
 import { cn } from "@/lib/utils";
@@ -154,6 +155,15 @@ export function ProjectDetailPage() {
                   </figure>
                 ))}
               </div>
+            </section>
+          ) : null}
+
+          {project.benchmark ? (
+            <section className={cn("mt-10", sectionEnterClass("delay-300"))}>
+              <h2 className="mb-4 text-lg font-semibold tracking-tight">
+                {project.benchmark.metricLabel}
+              </h2>
+              <ProjectBenchmarkChart benchmark={project.benchmark} />
             </section>
           ) : null}
 
