@@ -4,9 +4,27 @@ import { ArrowLeft, Github } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ProjectBenchmarkChart } from "@/components/project/ProjectBenchmarkChart";
-import { getProjectById } from "@/data/projects";
+import { getProjectById, type ProjectEvidence } from "@/data/projects";
 import { sectionEnterClass } from "@/lib/section-motion";
 import { cn } from "@/lib/utils";
+
+/** YouTube iframe `allow` — required for playback and fullscreen in embedded players */
+const YOUTUBE_EMBED_ALLOW =
+  "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+
+function evidenceMediaKey(item: ProjectEvidence, index: number): string {
+  if (item.kind === "youtube") {
+    return `youtube-${item.youtubeId || "empty"}-${index}`;
+  }
+  if (item.kind === "video") {
+    return `video-${item.src}-${index}`;
+  }
+  return `image-${item.src}-${index}`;
+}
+
+function youtubeNocookieEmbedUrl(videoId: string): string {
+  return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId.trim())}?rel=0`;
+}
 
 function DetailSection({
   title,
@@ -51,7 +69,7 @@ export function ProjectDetailPage() {
     );
   }
 
-  const gallery: { src: string; alt: string; caption?: string }[] =
+  const gallery: ProjectEvidence[] =
     project.evidence && project.evidence.length > 0
       ? project.evidence
       : project.image
@@ -137,15 +155,43 @@ export function ProjectDetailPage() {
               <div className="grid gap-6 sm:grid-cols-2">
                 {gallery.map((item, i) => (
                   <figure
-                    key={`${item.src}-${i}`}
+                    key={evidenceMediaKey(item, i)}
                     className="overflow-hidden rounded-xl border border-primary/15 bg-muted/25 shadow-sm"
                   >
                     <div className="relative aspect-video w-full bg-muted/40">
-                      <img
-                        src={item.src}
-                        alt={item.alt}
-                        className="h-full w-full object-contain object-center"
-                      />
+                      {item.kind === "youtube" ? (
+                        item.youtubeId.trim() ? (
+                          <iframe
+                            src={youtubeNocookieEmbedUrl(item.youtubeId)}
+                            title={item.alt}
+                            loading="lazy"
+                            allow={YOUTUBE_EMBED_ALLOW}
+                            allowFullScreen
+                            className="absolute inset-0 h-full w-full border-0"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center px-4 text-center text-sm text-muted-foreground">
+                            Paste your YouTube video id into project data (Unlisted
+                            visibility recommended for embeds).
+                          </div>
+                        )
+                      ) : item.kind === "video" ? (
+                        <video
+                          src={item.src}
+                          controls
+                          playsInline
+                          preload="metadata"
+                          poster={item.poster}
+                          aria-label={item.alt}
+                          className="h-full w-full object-contain object-center"
+                        />
+                      ) : (
+                        <img
+                          src={item.src}
+                          alt={item.alt}
+                          className="h-full w-full object-contain object-center"
+                        />
+                      )}
                     </div>
                     {item.caption ? (
                       <figcaption className="border-t border-border/60 px-4 py-3 text-sm text-muted-foreground">

@@ -1,26 +1,51 @@
 import type { ProjectBenchmark } from "@/data/projects";
 import { cn } from "@/lib/utils";
 
-const MAX_SCALE = 1;
-
 const seriesBarClass = (index: number) =>
   index === 0
     ? "bg-primary/85"
     : "bg-primary/40 ring-1 ring-inset ring-primary/30";
+
+function formatCellValue(v: number, maxScale: number) {
+  if (maxScale === 100) {
+    return `${v.toFixed(2)}%`;
+  }
+  return v.toFixed(2);
+}
+
+function titleForValue(v: number, maxScale: number) {
+  return formatCellValue(v, maxScale);
+}
 
 export function ProjectBenchmarkChart({
   benchmark,
 }: {
   benchmark: ProjectBenchmark;
 }) {
-  const { categories, series } = benchmark;
+  const {
+    categories,
+    series,
+    metricLabel,
+    footnote,
+    rowHeader = "Category",
+    maxScale = 1,
+  } = benchmark;
+
+  const gridClass =
+    categories.length > 4
+      ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+      : "grid-cols-2 sm:grid-cols-4";
+
+  const tableCaption =
+    maxScale === 100
+      ? `${metricLabel} — table (%, two decimal places)`
+      : `${metricLabel} — table (two decimal places)`;
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-muted-foreground">
-        Values are from the AIST3110 coursework report; axis labels abbreviate the
-        source albums.
-      </p>
+      {footnote ? (
+        <p className="text-sm text-muted-foreground">{footnote}</p>
+      ) : null}
 
       <div
         className="flex flex-wrap gap-4 text-sm"
@@ -39,9 +64,9 @@ export function ProjectBenchmarkChart({
       </div>
 
       <div
-        className="grid grid-cols-2 gap-4 sm:grid-cols-4"
+        className={cn("grid gap-4", gridClass)}
         role="group"
-        aria-label="CSR by album, grouped bars"
+        aria-label={`${metricLabel}, grouped bars`}
       >
         {categories.map((cat, i) => (
           <div
@@ -51,11 +76,11 @@ export function ProjectBenchmarkChart({
             <div
               className="flex h-40 w-full max-w-[8rem] items-end justify-center gap-1.5 sm:h-44"
               role="list"
-              aria-label={`${cat}: CSR for each model`}
+              aria-label={`${cat}: ${metricLabel}`}
             >
               {series.map((s, si) => {
                 const v = s.values[i] ?? 0;
-                const heightPct = (v / MAX_SCALE) * 100;
+                const heightPct = (v / maxScale) * 100;
                 return (
                   <div
                     key={s.name}
@@ -68,10 +93,10 @@ export function ProjectBenchmarkChart({
                         seriesBarClass(si)
                       )}
                       style={{ height: `${heightPct}%` }}
-                      title={`${s.name}: ${v.toFixed(2)}`}
+                      title={`${s.name}: ${titleForValue(v, maxScale)}`}
                     />
                     <span className="sr-only">
-                      {s.name} {v.toFixed(2)}
+                      {s.name} {formatCellValue(v, maxScale)}
                     </span>
                   </div>
                 );
@@ -87,7 +112,7 @@ export function ProjectBenchmarkChart({
       <div className="overflow-x-auto rounded-md border border-border/60">
         <table className="w-full min-w-[20rem] border-collapse text-sm">
           <caption className="border-b border-border/60 px-3 py-2 text-left text-xs text-muted-foreground">
-            CSR values (two decimal places)
+            {tableCaption}
           </caption>
           <thead>
             <tr className="border-b border-border/60 bg-muted/30">
@@ -95,7 +120,7 @@ export function ProjectBenchmarkChart({
                 scope="col"
                 className="px-3 py-2 text-left font-medium text-foreground"
               >
-                Album
+                {rowHeader}
               </th>
               {series.map((s) => (
                 <th
@@ -125,7 +150,7 @@ export function ProjectBenchmarkChart({
                     key={s.name}
                     className="px-3 py-2 text-right font-mono text-sm tabular-nums text-foreground"
                   >
-                    {(s.values[rowIdx] ?? 0).toFixed(2)}
+                    {formatCellValue(s.values[rowIdx] ?? 0, maxScale)}
                   </td>
                 ))}
               </tr>
