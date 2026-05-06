@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -6,17 +7,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Github } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-export interface ProjectItem {
-  title: string;
-  status: "Completed" | "In Progress" | "Maintainance"; // Example statuses
-  image?: string;
-  description: string;
-  repoUrl: string;
-  techStack?: string[];
-}
+import type { ProjectItem } from "@/data/projects";
 
 interface ProjectCardProps {
   project: ProjectItem;
@@ -24,15 +17,14 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const titleId = useId();
-  const isLink = Boolean(project.repoUrl?.trim());
+  const detailHref = `/projects/${project.id}`;
 
   const cardBody = (
     <Card
       className={cn(
         "overflow-hidden border border-transparent transition-[transform,box-shadow,border-color] duration-300 ease-out",
         "hover:-translate-y-1 hover:shadow-xl hover:border-primary/50",
-        isLink &&
-          "group-hover:-translate-y-1 group-hover:shadow-xl group-hover:border-primary/50 cursor-pointer"
+        "group-hover:-translate-y-1 group-hover:shadow-xl group-hover:border-primary/50 cursor-pointer"
       )}
     >
       <div className="flex flex-col md:flex-row">
@@ -41,7 +33,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           {project.image ? (
             <img
               src={project.image}
-              alt={isLink ? "" : project.title}
+              alt=""
               className="h-full w-full object-contain object-center"
             />
           ) : (
@@ -62,15 +54,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 {project.title}
               </CardTitle>
               <div className="flex shrink-0 items-center gap-2">
-                {isLink ? (
-                  <>
-                    <Github
-                      className="h-5 w-5 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
-                      aria-hidden
-                    />
-                    <span className="sr-only">GitHub repository</span>
-                  </>
-                ) : null}
+                <ArrowRight
+                  className="h-5 w-5 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
+                  aria-hidden
+                />
+                <span className="sr-only">View project details</span>
                 <Badge
                   variant={
                     project.status === "Completed" ? "default" : "secondary"
@@ -96,7 +84,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </CardHeader>
           <CardContent className="flex-1">
             <p className="leading-relaxed text-muted-foreground">
-              {project.description}
+              {project.summary}
             </p>
           </CardContent>
         </div>
@@ -104,19 +92,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
     </Card>
   );
 
-  if (!isLink) {
-    return cardBody;
-  }
-
   return (
-    <a
-      href={project.repoUrl}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Link
+      to={detailHref}
       aria-labelledby={titleId}
       className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {cardBody}
-    </a>
+    </Link>
   );
 }
