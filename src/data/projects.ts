@@ -104,7 +104,7 @@ export const PROJECTS: ProjectItem[] = [
     id: "allergy-guard",
     title: "AllergyGuard",
     status: "Completed",
-    image: "/images/allergy_guard.png",
+    image: "/images/allergy_guard-1.png",
     summary:
       "A native Android app that uses CameraX live scanning with ML Kit on-device text recognition and translation, length-aware fuzzy allergen matching against Room-backed profiles and synonyms, plus scan history with Maps-backed location context and offline-first translation models.",
     overview:
@@ -130,11 +130,30 @@ export const PROJECTS: ProjectItem[] = [
       "The hardest engineering work was geometric: mapping ML Kit boxes from sensor space to the on-screen preview reliably across rotations and mirror modes. Close behind was performance—running OCR and fuzzy logic on every frame overloaded the device until I throttled analysis frames and pushed heavy work onto background dispatchers away from the main thread. Tuning fuzzy thresholds against real OCR noise took iteration to limit false positives without missing genuine allergens. Relative to the course proposal, I delivered profile management, smart scan, detection, visual alerts, and history with maps; I also extended scope with on-device translation, connectivity-aware model downloads, and broadcast-based reminders—reflecting a deliberate offline-first posture. Future work might explore richer ingredient reasoning or tighter latency, but the shipping app already encodes what I learned about balancing UX, privacy, and systems constraints on Android.",
     evidence: [
       {
-        src: "/images/allergy_guard.png",
+        src: "/images/allergy_guard-1.png",
         alt: "AllergyGuard home dashboard with navigation cards",
         caption:
           "Home hub: Material cards for scan, allergy profile, history, and settings.",
       },
+      {
+        src: "/images/allergy_guard-2.png",
+        alt: "AllergyGuard scan flow with camera preview and allergen detection",
+        caption:
+          "Scan flow: CameraX preview with ML Kit text recognition and allergen detection.",
+      },
+      {
+        src: "/images/allergy_guard-3.png",
+        alt: "AllergyGuard allergy profile management with room database",
+        caption:
+          "Allergy profile management: Room database with seeded allergens and user-defined aliases.",
+      },
+      {
+        kind: "youtube",
+        youtubeId: "DGYQ5pnJFo8",
+        alt: "AllergyGuard demo video",
+        caption:
+          "AllergyGuard demo video.",
+      }
     ],
     repoUrl: "https://github.com/xiashuidaolaoshuren/allergy_guard",
     techStack: [
