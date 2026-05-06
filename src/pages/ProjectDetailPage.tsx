@@ -8,6 +8,10 @@ import { getProjectById, type ProjectEvidence } from "@/data/projects";
 import { sectionEnterClass } from "@/lib/section-motion";
 import { cn } from "@/lib/utils";
 
+/** Shared styling for text links back to the projects index (header + footer). */
+const projectsNavLinkClassName =
+  "inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary";
+
 /** YouTube iframe `allow` — required for playback and fullscreen in embedded players */
 const YOUTUBE_EMBED_ALLOW =
   "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
@@ -61,9 +65,13 @@ export function ProjectDetailPage() {
           <p className="mx-auto mt-3 max-w-md text-muted-foreground">
             That project does not exist or the link may be outdated.
           </p>
-          <Button variant="outline" className="mt-8" asChild>
-            <Link to="/projects">Back to projects</Link>
-          </Button>
+          <Link
+            to="/projects"
+            className={cn(projectsNavLinkClassName, "mt-8")}
+          >
+            <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+            Back to projects
+          </Link>
         </div>
       </div>
     );
@@ -82,7 +90,7 @@ export function ProjectDetailPage() {
         <div className="section-projects-frame px-4 py-8 sm:px-6 sm:py-10">
           <Link
             to="/projects"
-            className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+            className={cn(projectsNavLinkClassName, "mb-8")}
           >
             <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
             Back to projects
@@ -224,21 +232,22 @@ export function ProjectDetailPage() {
 
           <div
             className={cn(
-              "mt-12 flex flex-wrap gap-3 border-t border-border/70 pt-8",
+              "mt-12 flex justify-between flex-wrap items-center gap-3 border-t border-border/70 pt-8",
               sectionEnterClass("delay-300")
             )}
           >
-            <Button variant="outline" asChild>
-              <Link to="/projects">All projects</Link>
-            </Button>
-            <Button asChild>
+            <Link to="/projects" className={projectsNavLinkClassName}>
+              <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+              Back to projects
+            </Link>
+            <Button className="w-full sm:w-auto" asChild>
               <a
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Github className="h-4 w-4" aria-hidden />
-                GitHub repository
+                View on GitHub
               </a>
             </Button>
           </div>
