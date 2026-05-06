@@ -71,7 +71,8 @@ export interface ProjectItem {
   evidence?: ProjectEvidence[];
   repoUrl: string;
   techStack?: string[];
-  benchmark?: ProjectBenchmark;
+  /** Benchmark charts in display order (omit when none). */
+  benchmarks?: ProjectBenchmark[];
 }
 
 export const PROJECTS: ProjectItem[] = [
@@ -81,24 +82,123 @@ export const PROJECTS: ProjectItem[] = [
     status: "Completed",
     image: "/images/fyp.jpg",
     summary:
-      "Final Year Project researching trainless verifier methods to detect and mitigate hallucinations in LLMs within RAG systems.",
+      "A Generator–Retriever–Verifier–Mitigator pipeline for citation-grounded RAG that fuses trainless zero-shot signals—token entropy, retrieval-grounded heuristics, DeBERTa-v3 NLI, and self-agreement—with rule-based aggregation and mitigation (re-rank, re-prompt, filter), evaluated on RAGTruth and CiteBench-style citation workflows.",
     overview:
-      "This project investigates how retrieval-augmented generation can still produce confident but incorrect answers, and explores verifier-based mitigation without relying on additional model training.",
+      "Large language models can sound authoritative while drifting from retrieved evidence. For my final-year project I built an end-to-end, lightweight framework focused on hallucination detection and mitigation around citations—without training a massive LLM-as-a-judge. The design chains hybrid retrieval over Wikipedia, generation with harvested logits, atomic claim extraction, a transparent multi-signal verifier hub, and a mitigation orchestrator that can re-rank evidence, inject verifier critiques into a conservative second-pass generation, or surgically remove contradictory spans. The stack stays modular and reproducible on open-weight models so I could reason about recall-heavy safety defaults versus fluency.",
     problem:
-      "LLMs in RAG pipelines can blend retrieved facts with plausible fabrication. Traditional fixes often assume labeled data or costly fine-tuning; the goal here was to explore verification signals that work in a more train-light setting.",
+      "In RAG settings, models often interpolate or embellish beyond what passages support; fluent hallucinations erode trust and are costly to catch with opaque judges or bespoke fine-tuned detectors. I needed verification that is interpretable, train-light, and biased toward catching false negatives—letting a wrong claim through is usually worse than over-flagging—while still grounding decisions in evidence and internal uncertainty rather than single black-box scores.",
     approach:
-      "Implemented and evaluated trainless verifier approaches using natural language inference and consistency checks over generated answers against retrieved context, integrated with a Transformers-based experimentation stack.",
+      "I ingest a curated Wikipedia subset with spaCy-based chunking and dual indices: dense vectors from sentence-transformers (all-MiniLM-L6-v2) in a FAISS IndexFlatIP index and a BM25Okapi sparse index. Hybrid retrieval fuses ranks with reciprocal rank fusion before conditioning generation. The generator (Qwen3-4B-Instruct in 8-bit) runs with output_scores enabled so I can align character spans to subword tokens and compute mean Shannon entropy over decoding distributions as an intrinsic uncertainty signal. spaCy fragments outputs into atomic claims paired with evidence candidates. The verifier hub scores each pair with retrieval-grounded heuristics (NER anchors, numeric coverage, ROUGE-L-style overlap), zero-shot NLI via a DeBERTa-v3 cross-encoder (contradiction acts as a hierarchical veto), and self-agreement from high-temperature resamples with semantic clustering. A rule-based aggregator normalizes heterogeneous signals and issues Supported, Contradictory, or Low Confidence verdicts. The mitigation router selects actions by aggregate contradiction and low-confidence ratios across goals (balanced, accuracy-focused, attribution-safety): verifier-informed evidence re-ranking, critique-driven re-prompting at lower temperature, and reverse-order span filtering for stubborn contradictions. I shipped Gradio demos—a sentence-highlight Confidence UI and a three-stage controlled pipeline—for inspection alongside benchmarks on RAGTruth factuality and CiteBench/CiteEval-style citation mitigation.",
     features: [
-      "RAG-focused experimental setup for answer generation and grounding",
-      "Verifier-style checks using NLI and related signals",
-      "PyTorch / Transformers tooling for reproducible runs",
-      "Documentation suitable for academic hand-in and replication",
+      "Hybrid dense + sparse retrieval (FAISS + BM25Okapi) with reciprocal rank fusion over embedded Wikipedia chunks",
+      "Generator wrapper harvesting logits, token probabilities, and per-token entropy for claim-aligned intrinsic uncertainty",
+      "Atomic claim extraction with spaCy dependency parsing, sentence boundaries, and ClaimEvidencePair wiring",
+      "Retrieval-grounded heuristics: multi-tier entity matching, numeric anchors, and structural lexical overlap (ROUGE-L)",
+      "Zero-shot NLI with MoritzLaurer/DeBERTa-v3-large-mnli-fever-anli-ling-wanli as entailment/contradiction/neutral scorer",
+      "Self-agreement via stochastic sampling, semantic clustering, and majority-style support checks",
+      "Rule-based aggregation with normalization, safety-first veto logic, and configurable thresholds in YAML-style configs",
+      "Mitigation orchestrator: goal-oriented policy routing, retrieval re-ranking fused with verification signals, critique injection re-prompting, and span-preserving contradictory claim filtering",
+      "Evaluation split across RAGTruth (claim-level detection against annotations) and CiteBench workflows with deterministic filtering for signal isolation",
+      "Gradio Confidence UI (green/red/yellow highlights) and Controlled Pipeline UI (generate → verify → mitigate) inspired by transparent detector tooling",
+      "Open-weight stack: PyTorch, Hugging Face Transformers, Sentence-Transformers; Qwen3-4B-Instruct generator; external CiteEval oracle calls per report configuration",
     ],
     results:
-      "Concrete comparisons of mitigation strategies under controlled settings, with discussion of trade-offs between strict grounding and answer usefulness.",
-    evidence: [{ src: "/images/fyp.jpg", alt: "FYP project visual", caption: "Project showcase" }],
+      "On RAGTruth, our full trainless verifier traded some overall F1 versus the fine-tuned LettuceDetect baseline but pushed recall to about 0.82 with a deliberate false-negative-minimization stance—184 false negatives versus 576 false positives in the reported aggregate table, reflecting a safety-first preference for surfacing risky claims. NLI drove most detections; lexical grounding acted as a precision guard that cut false positives substantially versus NLI alone with only a handful of lost true positives. Intrinsic entropy and self-agreement did not fire standalone detection paths in our setup; they mainly calibrated confidence inside the ensemble. Task splits were revealing: structured Data2txt favored both pipelines; short QA answers stressed NLI and inflated false positives for our stack; long-form Summary benefited from multi-path aggregation where our full verifier exceeded the baseline F1 by leaning on recall-heavy contradiction and low-confidence coverage routes. On the mitigation side, NLI-guided filtering and re-prompting improved structural citation quality in the CiteEval-family workflow described in the report. The main lesson is that modular, interpretable trainless checks can mirror strong recall-focused auditing, but domain length, claim granularity, and evidence alignment remain the hard limits—future work would tighten QA precision and extend richer citation actuators without blowing up generation variance.",
+    evidence: [
+      {
+        src: "/images/fyp.jpg",
+        alt: "Gradio pipeline demonstration interface for the hallucination mitigation system",
+        caption:
+          "Pipeline demonstration UI: interactive Gradio workflow for generation, verification signals, and mitigation.",
+      },
+      {
+        kind: "youtube",
+        youtubeId: "3ulh_HrPxns",
+        alt: "Demo video of the hallucination mitigation system",
+        caption:
+          "Demo video of the hallucination detection and mitigation system.",
+      },
+    ],
     repoUrl: "https://github.com/xiashuidaolaoshuren/AIST-FYP",
-    techStack: ["Python", "PyTorch", "Transformers", "RAG", "NLI"],
+    techStack: [
+      "Python",
+      "PyTorch",
+      "Transformers",
+      "Qwen3",
+      "DeBERTa-v3",
+      "FAISS",
+      "BM25",
+      "spaCy",
+      "Gradio",
+      "RAG",
+      "NLI",
+    ],
+    benchmarks: [
+      {
+        metricLabel: "RAGTruth detection F1 (by task)",
+        rowHeader: "Task",
+        footnote:
+          "F1 scores: full_verifier is the multi-signal trainless ensemble; LettuceDetect is the fine-tuned baseline. Variant-only ablations are omitted here.",
+        categories: ["Overall", "Data2txt", "QA", "Summary"],
+        series: [
+          {
+            name: "full_verifier",
+            values: [0.6875, 0.821, 0.5333, 0.5361],
+          },
+          {
+            name: "LettuceDetect (baseline)",
+            values: [0.7607, 0.8789, 0.6552, 0.5052],
+          },
+        ],
+      },
+      {
+        metricLabel: "CiteBench — citation quality (normalized %)",
+        rowHeader: "Metric",
+        maxScale: 100,
+        footnote:
+          "Normalized to 0–100% for one chart: CE mean sentence rating as (score ÷ 5) × 100; CR IterCoE and CR EditDist as score × 100. Raw CiteEval scales are in the AIST-4999 report (Table 8, §6.3.2). ASQA-oracle / CiteBench, 316 queries; full_verifier + filter vs LettuceDetect baseline.",
+        categories: [
+          "CE mean sentence rating",
+          "CR IterCoE (answer)",
+          "CR EditDist (answer)",
+        ],
+        series: [
+          {
+            name: "full_verifier + filter",
+            values: [55.01, 57.98, 78.49],
+          },
+          {
+            name: "LettuceDetect (baseline)",
+            values: [34.06, 92.41, 93.64],
+          },
+        ],
+      },
+      {
+        metricLabel: "CiteBench — mitigation actuators (normalized %)",
+        rowHeader: "Metric",
+        maxScale: 100,
+        footnote:
+          "From Table 14 (§6.3.5), comparing filter-only baseline to the full mitigation stack: statement rating, density, and CA retrieval ratio × 100; CE mean sentence rating as (score ÷ 5) × 100; CR IterCoE and CR EditDist (answer) × 100. Per-actuator ablations (filter / rerank / reprompt only) are omitted here.",
+        categories: [
+          "Statement",
+          "Density",
+          "CA retrieval",
+          "CE mean",
+          "CR IterCoE",
+          "CR EditDist",
+        ],
+        series: [
+          {
+            name: "full_verifier_filter (baseline)",
+            values: [59.34, 82.9, 86.93, 55.01, 57.98, 78.49],
+          },
+          {
+            name: "mitigation_all",
+            values: [81.58, 87.88, 86.66, 80.8, 78.24, 84.57],
+          },
+        ],
+      },
+    ],
   },
   {
     id: "allergy-guard",
@@ -222,30 +322,32 @@ export const PROJECTS: ProjectItem[] = [
       "ByteTrack",
       "Streamlit",
     ],
-    benchmark: {
-      metricLabel: "Detection rate (%) by condition",
-      maxScale: 100,
-      rowHeader: "Condition",
-      footnote:
-        "Values from the AIST4010 final report (§4.3): baseline is zero-shot performance of the real-world pretrained detector on the GTA V evaluation split; fine-tuned uses in-domain annotated gameplay.",
-      categories: [
-        "Overall",
-        "Day / Clear",
-        "Day / Rain",
-        "Night / Clear",
-        "Night / Rain",
-      ],
-      series: [
-        {
-          name: "Baseline",
-          values: [77.53, 79.41, 89.47, 76.0, 70.73],
-        },
-        {
-          name: "Fine-tuned",
-          values: [93.82, 91.18, 100.0, 96.0, 92.68],
-        },
-      ],
-    },
+    benchmarks: [
+      {
+        metricLabel: "Detection rate (%) by condition",
+        maxScale: 100,
+        rowHeader: "Condition",
+        footnote:
+          "Values from the AIST4010 final report (§4.3): baseline is zero-shot performance of the real-world pretrained detector on the GTA V evaluation split; fine-tuned uses in-domain annotated gameplay.",
+        categories: [
+          "Overall",
+          "Day / Clear",
+          "Day / Rain",
+          "Night / Clear",
+          "Night / Rain",
+        ],
+        series: [
+          {
+            name: "Baseline",
+            values: [77.53, 79.41, 89.47, 76.0, 70.73],
+          },
+          {
+            name: "Fine-tuned",
+            values: [93.82, 91.18, 100.0, 96.0, 92.68],
+          },
+        ],
+      },
+    ],
   },
   {
     id: "automatic-chord-recognition",
@@ -300,28 +402,30 @@ export const PROJECTS: ProjectItem[] = [
       "PyTorch",
       "BiLSTM",
     ],
-    benchmark: {
-      metricLabel: "Chord Symbol Recall (CSR) by album",
-      rowHeader: "Album",
-      footnote:
-        "Values are from the AIST3110 coursework report; axis labels abbreviate the source albums.",
-      categories: [
-        "Please Please Me",
-        "With the Beatles",
-        "Queen Hits I",
-        "Tapestry",
-      ],
-      series: [
-        {
-          name: "Random Forest",
-          values: [0.44, 0.49, 0.4, 0.4],
-        },
-        {
-          name: "BiLSTM",
-          values: [0.8, 0.8, 0.72, 0.69],
-        },
-      ],
-    },
+    benchmarks: [
+      {
+        metricLabel: "Chord Symbol Recall (CSR) by album",
+        rowHeader: "Album",
+        footnote:
+          "Values are from the AIST3110 coursework report; axis labels abbreviate the source albums.",
+        categories: [
+          "Please Please Me",
+          "With the Beatles",
+          "Queen Hits I",
+          "Tapestry",
+        ],
+        series: [
+          {
+            name: "Random Forest",
+            values: [0.44, 0.49, 0.4, 0.4],
+          },
+          {
+            name: "BiLSTM",
+            values: [0.8, 0.8, 0.72, 0.69],
+          },
+        ],
+      },
+    ],
   },
   {
     id: "hand-gesture-music-controller",

@@ -204,14 +204,19 @@ export function ProjectDetailPage() {
             </section>
           ) : null}
 
-          {project.benchmark ? (
-            <section className={cn("mt-10", sectionEnterClass("delay-300"))}>
-              <h2 className="mb-4 text-lg font-semibold tracking-tight">
-                {project.benchmark.metricLabel}
-              </h2>
-              <ProjectBenchmarkChart benchmark={project.benchmark} />
-            </section>
-          ) : null}
+          {project.benchmarks && project.benchmarks.length > 0
+            ? project.benchmarks.map((bm, idx) => (
+                <section
+                  key={`${bm.metricLabel}-${idx}`}
+                  className={cn("mt-10", sectionEnterClass("delay-300"))}
+                >
+                  <h2 className="mb-4 text-lg font-semibold tracking-tight">
+                    {bm.metricLabel}
+                  </h2>
+                  <ProjectBenchmarkChart benchmark={bm} />
+                </section>
+              ))
+            : null}
 
           <DetailSection title="Results & learnings" delayClass="delay-300">
             <p>{project.results}</p>
