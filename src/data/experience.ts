@@ -1,6 +1,6 @@
 /**
  * Experience entries for Job Experience and Education sections.
- * Cards link to /experience/:id; detail pages use optional details, location, and url.
+ * Cards link to /experience/:id; detail pages use institutionOverview, contributions, location, and url.
  */
 
 export type ExperienceKind = "job" | "education";
@@ -19,9 +19,19 @@ export interface ExperienceItem {
   title: string;
   organization: string;
   time: string;
-  /** Full narrative; cards show a line-clamped teaser. */
-  description: string;
-  /** Accomplishment bullets on the detail page only. */
+  /**
+   * Neutral, third-person context about the organization (sector, reputation, programmes).
+   * Shown under “About …” on the detail page and on listing cards unless `cardSummary` is set.
+   */
+  institutionOverview: string;
+  /**
+   * Optional short teaser on listing cards (role- or outcome-focused).
+   * Falls back to `institutionOverview` with line clamp when omitted.
+   */
+  cardSummary?: string;
+  /** Optional paragraph above contribution bullets on the detail page. */
+  contributionsIntro?: string;
+  /** Bullet list of your contributions, studies, electives, or outcomes. */
   details?: string[];
   emblem?: string;
   /** Institute or organization website (used on detail page). */
@@ -36,12 +46,16 @@ export const JOB_EXPERIENCES: ExperienceItem[] = [
     title: "Software Engineer Intern (Summer 2025)",
     organization: "iASPEC Service Limited",
     time: "June 2025 - August 2025",
-    description:
-      "Conducted research and developed an AI-powered software testing platform, contributing approximately 300 commits to the codebase. Collaborated with a team of senior software engineers and assisted in the development of the platform's frontend and backend components.",
+    institutionOverview:
+      "iASPEC Service Limited is a Hong Kong–based technology company that delivers software and IT services for enterprises, including platforms that combine automation with intelligent tooling.",
+    cardSummary:
+      "Summer internship building an AI-assisted software testing platform with the engineering team—frontend and backend work across ~300 commits.",
+    contributionsIntro:
+      "Over three months I worked alongside senior engineers on an AI-powered software testing platform, shipping features across the stack and contributing steadily to the shared codebase.",
     details: [
-      "Built and iterated on an AI-powered software testing platform alongside senior engineers.",
-      "Contributed roughly 300 commits across frontend and backend work on the codebase.",
-      "Supported research and implementation for test automation and platform reliability.",
+      "Collaborated with senior engineers on frontend and backend components for the platform.",
+      "Contributed roughly 300 commits while iterating on reliability and product-facing workflows.",
+      "Supported research and implementation tied to automated testing and intelligent tooling.",
     ],
     emblem: "/images/Emblem_of_iASPEC.png",
     url: "https://www.iaspec.com/",
@@ -61,12 +75,14 @@ export const EDUCATION_ITEMS: ExperienceItem[] = [
     title: "B.Eng. in Artificial Intelligence",
     organization: "The Chinese University of Hong Kong",
     time: "2022 - Present",
-    description:
-      "One of the top universities in Hong Kong, and highly ranked in the field of Computer Science. My study focusing on Computer Vision and Large Language Models (LLMs) and exploring the technological frontier and applying AI to solve real-world problems. (Note: Although the university are named with 'Chinese', all major courses are taught in English.)",
+    institutionOverview:
+      "The Chinese University of Hong Kong is one of Hong Kong’s leading research universities and ranks strongly in engineering and computer science. Its Artificial Intelligence programme sits within that ecosystem of rigorous technical training and research-led teaching. Although “Chinese” appears in the university name, major undergraduate courses are taught in English.",
+    cardSummary:
+      "Undergraduate AI studies centred on computer vision and large language models, with projects oriented toward real-world applications.",
     details: [
-      "Focused on Computer Vision and Large Language Models (LLMs).",
-      "Coursework and projects emphasize applying AI to real-world problems.",
-      "Instruction is in English across major courses.",
+      "Focused academically on Computer Vision and Large Language Models (LLMs).",
+      "Coursework and projects emphasize applying AI models to practical problems.",
+      "Experience studying in English across core engineering and AI subjects.",
     ],
     emblem: "/images/Emblem_of_CU.png",
     url: "https://www.cuhk.edu.hk/english/index.html",
@@ -83,12 +99,14 @@ export const EDUCATION_ITEMS: ExperienceItem[] = [
     title: "Secondary Education",
     organization: "S.K.H. Chan Young Secondary School",
     time: "2016 - 2022",
-    description:
-      "A reputable English secondary school in North District, Hong Kong where I completed my secondary education with a focus on science and technology. I chose Physics, Chemistry and ICT as my elective subjects to build a strong foundation for my future studies in engineering.",
+    institutionOverview:
+      "S.K.H. Chan Young Secondary School is an English-medium secondary school in Hong Kong’s North District with a sustained emphasis on science and technology pathways alongside the broader curriculum.",
+    cardSummary:
+      "Six years of secondary study with Physics, Chemistry, and ICT electives as preparation for engineering.",
     details: [
-      "Electives: Physics, Chemistry, and ICT.",
-      "English-medium secondary school in North District, Hong Kong.",
-      "Prepared a foundation for further engineering study.",
+      "Selected Physics, Chemistry, and ICT electives to strengthen STEM foundations.",
+      "Completed secondary education in an English-medium environment in North District, Hong Kong.",
+      "Built transferable habits for analytical problem-solving ahead of university engineering study.",
     ],
     emblem: "/images/Emblem_of_SKHCYSS.png",
     url: "https://www.skhcyss.edu.hk/",
@@ -105,11 +123,13 @@ export const EDUCATION_ITEMS: ExperienceItem[] = [
     title: "Primary Education",
     organization: "Tsang Mui Millennium School",
     time: "2010 - 2016",
-    description:
-      "A reputable primary school in North District, Hong Kong where I completed my primary education with a focus on foundational knowledge and skills. I developed a strong interest in science and technology during my time here.",
+    institutionOverview:
+      "Tsang Mui Millennium School is a primary school in Hong Kong’s North District offering foundational literacy, numeracy, and general studies across standard Hong Kong curriculum expectations.",
+    cardSummary:
+      "Primary years in North District where interest in science and technology first took shape.",
     details: [
       "Completed primary education in North District, Hong Kong.",
-      "Developed early interest in science and technology.",
+      "Developed early curiosity in science and technology through classroom and extracurricular exposure.",
     ],
     emblem: "/images/Emblem_of_TMMS.png",
     url: "https://www.tmms.edu.hk/",

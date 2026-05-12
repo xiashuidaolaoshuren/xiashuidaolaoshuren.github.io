@@ -91,6 +91,14 @@ export function ExperienceDetailPage() {
 
   const mapZoom = experience.location?.zoom ?? 15;
 
+  const aboutTitle = `About ${experience.organization}`;
+  const contributionsTitle =
+    experience.kind === "job" ? "What I did" : "My focus";
+  const hasContributionBullets =
+    Boolean(experience.details && experience.details.length > 0);
+  const showContributionsSection =
+    Boolean(experience.contributionsIntro) || hasContributionBullets;
+
   return (
     <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-10 lg:px-14 xl:px-20">
       <article className={cn("py-12", sectionEnterClass())}>
@@ -144,17 +152,22 @@ export function ExperienceDetailPage() {
             </div>
           </header>
 
-          <DetailSection title="Overview" delayClass="delay-75">
-            <p>{experience.description}</p>
+          <DetailSection title={aboutTitle} delayClass="delay-75">
+            <p>{experience.institutionOverview}</p>
           </DetailSection>
 
-          {experience.details && experience.details.length > 0 ? (
-            <DetailSection title="What I did" delayClass="delay-100">
-              <ul className="list-inside list-disc space-y-2 marker:text-primary/70">
-                {experience.details.map((line, index) => (
-                  <li key={index}>{line}</li>
-                ))}
-              </ul>
+          {showContributionsSection ? (
+            <DetailSection title={contributionsTitle} delayClass="delay-100">
+              {experience.contributionsIntro ? (
+                <p className="mb-4">{experience.contributionsIntro}</p>
+              ) : null}
+              {hasContributionBullets ? (
+                <ul className="list-inside list-disc space-y-2 marker:text-primary/70">
+                  {(experience.details ?? []).map((line, index) => (
+                    <li key={index}>{line}</li>
+                  ))}
+                </ul>
+              ) : null}
             </DetailSection>
           ) : null}
 

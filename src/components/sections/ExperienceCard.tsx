@@ -48,7 +48,9 @@ export function ExperienceCard({ item }: ExperienceCardProps) {
           </div>
         </div>
         <div className="w-full md:w-2/3">
-          <p className="line-clamp-3 leading-relaxed">{item.description}</p>
+          <p className="line-clamp-3 leading-relaxed">
+            {item.cardSummary ?? item.institutionOverview}
+          </p>
         </div>
       </CardContent>
     </Card>
