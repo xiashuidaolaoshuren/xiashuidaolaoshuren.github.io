@@ -27,6 +27,14 @@ function DetailSection({
   );
 }
 
+/** Split `institutionOverview` on blank lines into paragraphs for rendering. */
+function institutionOverviewParagraphs(text: string): string[] {
+  return text
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+
 function googleMapsEmbedPlaceUrl(
   lat: number,
   lng: number,
@@ -153,7 +161,13 @@ export function ExperienceDetailPage() {
           </header>
 
           <DetailSection title={aboutTitle} delayClass="delay-75">
-            <p>{experience.institutionOverview}</p>
+            {institutionOverviewParagraphs(experience.institutionOverview).map(
+              (paragraph, idx) => (
+                <p key={idx} className={cn(idx > 0 && "mt-4")}>
+                  {paragraph}
+                </p>
+              )
+            )}
           </DetailSection>
 
           {showContributionsSection ? (

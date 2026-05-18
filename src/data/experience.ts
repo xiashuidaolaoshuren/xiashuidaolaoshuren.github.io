@@ -22,6 +22,7 @@ export interface ExperienceItem {
   /**
    * Neutral, third-person context about the organization (sector, reputation, programmes).
    * Shown under “About …” on the detail page and on listing cards unless `cardSummary` is set.
+   * Use a blank line between paragraphs; each block is rendered as its own `<p>`.
    */
   institutionOverview: string;
   /**
@@ -47,7 +48,7 @@ export const JOB_EXPERIENCES: ExperienceItem[] = [
     organization: "iASPEC Service Limited",
     time: "June 2025 - August 2025",
     institutionOverview:
-      "iASPEC Service Limited is a Hong Kong–based technology company that delivers software and IT services for enterprises, including platforms that combine automation with intelligent tooling.",
+      "The iASPEC Group traces its roots to Hong Kong in 1988 and positions itself as a software and technology house serving enterprises across several domains.\n\nPublic-facing materials highlight four pillars: financial technology (including secure interbank and cross-border payment channels aligned with clearing, RTGS, and SWIFT-class infrastructure), health technology (teleconsultation and remote monitoring oriented offerings), education technology (interactive e-learning, virtual classrooms, and adaptive-style curricula messaging), and identity-oriented cybersecurity (digital signatures, strong authentication, and compliance-aware enterprise protections). Consulting, cloud delivery, and R&D outsourcing appear alongside product-style offerings.\n\niASPEC Service Limited operates as part of this broader footprint in Hong Kong, contributing enterprise-grade engineering where automation, reliability, and intelligent tooling intersect.",
     cardSummary:
       "Summer internship building an AI-assisted software testing platform with the engineering team—frontend and backend work across ~300 commits.",
     contributionsIntro:
@@ -76,7 +77,7 @@ export const EDUCATION_ITEMS: ExperienceItem[] = [
     organization: "The Chinese University of Hong Kong",
     time: "2022 - Present",
     institutionOverview:
-      "The Chinese University of Hong Kong is one of Hong Kong’s leading research universities and ranks strongly in engineering and computer science. Its Artificial Intelligence programme sits within that ecosystem of rigorous technical training and research-led teaching. Although “Chinese” appears in the university name, major undergraduate courses are taught in English.",
+      "The Chinese University of Hong Kong (CUHK) is a comprehensive, research-intensive university in Hong Kong’s New Territories (Sha Tin). It is organised around academic faculties and the collegiate system—undergraduate students typically affiliate with a constituent college while pursuing disciplinary majors.\n\nAcross engineering and broader STEM fields, CUHK maintains substantial teaching and research capacity and participates actively in Hong Kong’s innovation ecosystem (including partnerships and mainland-facing centres referenced on the university website).\n\nThe undergraduate Artificial Intelligence programme fits within this engineering-facing environment: students receive rigorous technical training alongside electives and projects aimed at connecting theory to applications. Despite “Chinese” in the institution name, major undergraduate engineering and science courses are commonly delivered in English.",
     cardSummary:
       "Undergraduate AI studies centred on computer vision and large language models, with projects oriented toward real-world applications.",
     details: [
@@ -100,7 +101,7 @@ export const EDUCATION_ITEMS: ExperienceItem[] = [
     organization: "S.K.H. Chan Young Secondary School",
     time: "2016 - 2022",
     institutionOverview:
-      "S.K.H. Chan Young Secondary School is an English-medium secondary school in Hong Kong’s North District with a sustained emphasis on science and technology pathways alongside the broader curriculum.",
+      "S.K.H. Chan Young Secondary School is a secondary school under the Anglican (Sheng Kung Hui) family of schools in Hong Kong. Its campus address on record is 6 Chi Cheong Road, Sheung Shui, New Territories.\n\nThe school presents itself as English-medium oriented and participates in broader EMI-school activities—for example student showcases tied to the Association of English Medium Secondary Schools appear among recent news items on the official website.\n\nBeyond languages, public communications emphasize STEM-linked engagement (including ICT-oriented experiences and STEAM-team competitions), careers and life-planning structures, student organisations, and overseas-style learning journeys alongside core HKDSE-facing curriculum.",
     cardSummary:
       "Six years of secondary study with Physics, Chemistry, and ICT electives as preparation for engineering.",
     details: [
@@ -124,7 +125,7 @@ export const EDUCATION_ITEMS: ExperienceItem[] = [
     organization: "Tsang Mui Millennium School",
     time: "2010 - 2016",
     institutionOverview:
-      "Tsang Mui Millennium School is a primary school in Hong Kong’s North District offering foundational literacy, numeracy, and general studies across standard Hong Kong curriculum expectations.",
+      "Tsang Mui Millennium School is an aided, whole-day, co-educational primary school in North District (Primary One Admission School Net 80). It opened in 2003, is sponsored by the Lee Chi Tat Memorial Fund Ltd., and sits at 1 Tsing Shing Road, Sheung Shui, New Territories. The medium of instruction reported in the official school profile is Chinese.\n\nThe campus occupies on the order of 6,500 m² with a full six-year class structure (30 classes across P1–P6 in recent years). Facilities named in the school’s public profile include multimedia language provision, arts and music spaces, libraries, and rooms that support diversified learning beyond standard classrooms.\n\nThe school’s stated mission centres on holistic “Sun education,” balancing academic learning with language development, values formation, liberal-arts breadth, creativity, pastoral care, and appreciative classroom culture.\n\nPublic communications also highlight multiple-intelligence style programmes, experiential outdoor learning across primary levels, and overseas learning opportunities for senior pupils. The school motto recorded in its official profile is “Constantly strive for self-perfection.” (Figures above follow the Primary School Profile as published via the Hong Kong Committee for Home-School Cooperation.)",
     cardSummary:
       "Primary years in North District where interest in science and technology first took shape.",
     details: [
