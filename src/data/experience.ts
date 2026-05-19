@@ -6,11 +6,26 @@
 export type ExperienceKind = "job" | "education";
 
 export interface ExperienceLocation {
+  /** Full address shown under “Location” on the detail page. */
   address: string;
-  lat: number;
-  lng: number;
+  /**
+   * Optional Google Maps Embed `q` when text search works better than coordinates
+   * (e.g. institution name with correct casing).
+   */
+  mapQuery?: string;
+  /** Optional precise pin; takes precedence over `mapQuery` / `address` in the embed. */
+  lat?: number;
+  lng?: number;
   /** Map zoom level for Google Embed API (default 15 on the detail page). */
   zoom?: number;
+}
+
+/** Resolves the `q` parameter for Google Maps Embed API. */
+export function resolveMapEmbedQuery(location: ExperienceLocation): string {
+  if (location.lat != null && location.lng != null) {
+    return `${location.lat},${location.lng}`;
+  }
+  return location.mapQuery ?? location.address;
 }
 
 export interface ExperienceItem {
@@ -61,10 +76,13 @@ export const JOB_EXPERIENCES: ExperienceItem[] = [
     emblem: "/images/Emblem_of_iASPEC.png",
     url: "https://www.iaspec.com/",
     location: {
-      address: "Hong Kong",
-      lat: 22.3115,
-      lng: 114.2246,
-      zoom: 14,
+      address:
+        "Room 511, 5/F, Lakeside I, Phase II, Hong Kong Science Park, Shatin, Hong Kong",
+      mapQuery:
+        "iASPEC Service Limited, Suite 511, Lakeside 1, 8 Science Park West Avenue, Hong Kong Science Park, Shatin, Hong Kong",
+      lat: 22.426009,
+      lng: 114.211387,
+      zoom: 18,
     },
   },
 ];
@@ -88,9 +106,7 @@ export const EDUCATION_ITEMS: ExperienceItem[] = [
     emblem: "/images/Emblem_of_CU.png",
     url: "https://www.cuhk.edu.hk/english/index.html",
     location: {
-      address: "Shatin, New Territories, Hong Kong",
-      lat: 22.4166,
-      lng: 114.2103,
+      address: "The Chinese University of Hong Kong, Shatin, NT, Hong Kong SAR",
       zoom: 15,
     },
   },
@@ -112,10 +128,10 @@ export const EDUCATION_ITEMS: ExperienceItem[] = [
     emblem: "/images/Emblem_of_SKHCYSS.png",
     url: "https://www.skhcyss.edu.hk/",
     location: {
-      address: "North District, Hong Kong",
-      lat: 22.4945,
-      lng: 114.1388,
-      zoom: 15,
+      address: "6 Chi Cheong Road, Sheung Shui, North District, Hong Kong",
+      mapQuery:
+        "S.K.H. Chan Young Secondary School, 6 Chi Cheong Road, Sheung Shui, North District, Hong Kong",
+      zoom: 16,
     },
   },
   {
@@ -135,10 +151,12 @@ export const EDUCATION_ITEMS: ExperienceItem[] = [
     emblem: "/images/Emblem_of_TMMS.png",
     url: "https://www.tmms.edu.hk/",
     location: {
-      address: "North District, Hong Kong",
-      lat: 22.5065,
-      lng: 114.1282,
-      zoom: 15,
+      address: "1 Ching Shing Road, Sheung Shui, North District, Hong Kong",
+      mapQuery:
+        "Tsang Mui Millennium School, 1 Tsing Shing Road, Sheung Shui, North District, Hong Kong",
+      lat: 22.4940034,
+      lng: 114.1250423,
+      zoom: 17,
     },
   },
 ];

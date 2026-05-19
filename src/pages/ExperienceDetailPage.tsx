@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getExperienceById } from "@/data/experience";
+import { getExperienceById, resolveMapEmbedQuery } from "@/data/experience";
 import { sectionEnterClass } from "@/lib/section-motion";
 import { cn } from "@/lib/utils";
 
@@ -36,15 +36,14 @@ function institutionOverviewParagraphs(text: string): string[] {
 }
 
 function googleMapsEmbedPlaceUrl(
-  lat: number,
-  lng: number,
+  address: string,
   zoom: number,
   apiKey: string
 ): string {
   const base = "https://www.google.com/maps/embed/v1/place";
   const params = new URLSearchParams({
     key: apiKey,
-    q: `${lat},${lng}`,
+    q: address,
     zoom: String(zoom),
   });
   return `${base}?${params.toString()}`;
@@ -198,8 +197,7 @@ export function ExperienceDetailPage() {
                   <iframe
                     title={`Map: ${experience.organization}`}
                     src={googleMapsEmbedPlaceUrl(
-                      experience.location.lat,
-                      experience.location.lng,
+                      resolveMapEmbedQuery(experience.location),
                       mapZoom,
                       mapsApiKey
                     )}
