@@ -21,7 +21,8 @@ const payload = {
   intro:
     "Recent CUHK B.Eng. AI graduate based in Hong Kong. I build with React, TypeScript, HTML/CSS, and JavaScript, and have shipped web features in internship roles at iASPEC and Gekko. I am applying via Method 1 because it matches how I like to work: clear contracts, practical tooling, and shipping real products.",
   website: `${SITE_BASE}/`,
-  note: "Submitted via Method 1 JSON POST. Portfolio and CV are hosted on GitHub Pages; the submission script is linked at code_url.",
+  note:
+    "I am a Hong Kong permanent resident. Submitted via Method 1 JSON POST; portfolio and CV are hosted on GitHub Pages, and the submission script is linked at code_url.",
   code_url: `${REPO_RAW_BASE}/scripts/wemine-apply.mjs`,
 }
 
