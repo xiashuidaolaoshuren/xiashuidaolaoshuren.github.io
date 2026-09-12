@@ -7,7 +7,8 @@
  * Submit:  node scripts/wemine-apply.mjs --submit
  */
 
-const ENDPOINT = "http://career.wemine.hk/cv-submit"
+// Listing shows http://; nginx 301s to https and fetch would drop the POST body.
+const ENDPOINT = "https://career.wemine.hk/cv-submit"
 const SITE_BASE = "https://xiashuidaolaoshuren.github.io"
 const REPO_RAW_BASE =
   "https://raw.githubusercontent.com/xiashuidaolaoshuren/xiashuidaolaoshuren.github.io/main"
