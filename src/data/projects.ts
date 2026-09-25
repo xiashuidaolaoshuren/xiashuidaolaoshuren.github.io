@@ -160,7 +160,7 @@ export const PROJECTS: ProjectItem[] = (() => {
           "Demo video of the hallucination detection and mitigation system.",
       },
     ],
-    repoUrl: "https://github.com/xiashuidaolaoshuren/AIST-FYP",
+    repoUrl: "https://github.com/xiashuidaolaoshuren/hallucination_detection",
     techStack: [
       "Python",
       "PyTorch",
@@ -436,7 +436,7 @@ export const PROJECTS: ProjectItem[] = (() => {
           "Sample Chord Estimation Results.",
       },
     ],
-    repoUrl: "https://github.com/xiashuidaolaoshuren/AIST3110_Proj",
+    repoUrl: "https://github.com/xiashuidaolaoshuren/chord_reg",
     techStack: [
       "Python",
       "NumPy",
@@ -510,7 +510,7 @@ export const PROJECTS: ProjectItem[] = (() => {
           "Mediapipe hand landmarks.",
       },
     ],
-    repoUrl: "https://github.com/xiashuidaolaoshuren/AIST_2010_Proj",
+    repoUrl: "https://github.com/xiashuidaolaoshuren/hand_music_control",
     techStack: [
       "Python",
       "OpenCV",
@@ -565,7 +565,7 @@ export const PROJECTS: ProjectItem[] = (() => {
           "Structured follow-up: instant source inspection from persisted SQLite traces.",
       },
     ],
-    repoUrl: "https://github.com/xiashuidaolaoshuren/agentic_ai_proj",
+    repoUrl: "https://github.com/xiashuidaolaoshuren/ai_news_agent",
     techStack: [
       "Python",
       "LangGraph",
@@ -620,7 +620,7 @@ export const PROJECTS: ProjectItem[] = (() => {
           "Plan history: paginated list of saved daily plans with summary metadata.",
       },
     ],
-    repoUrl: "https://github.com/xiashuidaolaoshuren/java_project",
+    repoUrl: "https://github.com/xiashuidaolaoshuren/focusflow",
     techStack: [
       "Java",
       "Spring Boot",
