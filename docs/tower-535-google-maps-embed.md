@@ -52,8 +52,19 @@ curl.exe -s "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?i
 
 Confirm `name` is **TOWER 535** (or the intended building), then use `place_id:…` in `mapQuery`. Spot-check `/experience/gekko-2026` with `VITE_GOOGLE_MAPS_API_KEY` set.
 
+## Deployment: the embedded map needs the key at build time
+
+Vite inlines `VITE_GOOGLE_MAPS_API_KEY` into the bundle at build time. The local key lives in `.env.local` (gitignored), so GitHub Actions never sees it unless the repository defines it as a secret.
+
+1. Add a repository Actions secret named `VITE_GOOGLE_MAPS_API_KEY` (Settings → Secrets and variables → Actions → New repository secret).
+2. `.github/workflows/deploy.yml` passes it to both the key check and the build step, so `npm run build` bakes it into `dist`.
+3. Restrict the key in Google Cloud to the **Maps Embed API**, with HTTP referrers for `https://xiashuidaolaoshuren.github.io/*` and `http://localhost:*`. An embed key is visible in the browser bundle; the referrer restriction keeps it from being reused elsewhere.
+
+If the secret is missing, the deploy still succeeds and each `/experience/:id` page shows the address with an "Open in Google Maps" link instead of the iframe. The workflow prints a warning in that case.
+
 ## Related code
 
 - Data: `src/data/experience.ts` (`gekko-2026.location`)
 - Embed URL builder: `src/pages/ExperienceDetailPage.tsx` (`googleMapsEmbedPlaceUrl`)
+- No-key fallback link: `googleMapsSearchUrl` in `src/pages/ExperienceDetailPage.tsx`
 - Query resolution: `resolveMapEmbedQuery` in `src/data/experience.ts`

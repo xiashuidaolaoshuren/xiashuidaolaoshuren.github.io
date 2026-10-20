@@ -51,6 +51,25 @@ function googleMapsEmbedPlaceUrl(
   return `${base}?${params.toString()}`;
 }
 
+/**
+ * Public Google Maps link used when no Embed API key is available.
+ * A `place_id:` query is resolved through `query_place_id`; anything else is
+ * passed as free-text `query`.
+ */
+function googleMapsSearchUrl(query: string, address: string): string {
+  const placeIdPrefix = "place_id:";
+  if (query.startsWith(placeIdPrefix)) {
+    const params = new URLSearchParams({
+      api: "1",
+      query: address,
+      query_place_id: query.slice(placeIdPrefix.length),
+    });
+    return `https://www.google.com/maps/search/?${params.toString()}`;
+  }
+  const params = new URLSearchParams({ api: "1", query });
+  return `https://www.google.com/maps/search/?${params.toString()}`;
+}
+
 export function ExperienceDetailPage() {
   const { id } = useParams<{ id: string }>();
   const experience = id ? getExperienceById(id) : undefined;
@@ -84,21 +103,21 @@ export function ExperienceDetailPage() {
   const backTo =
     experience.kind === "job" ? "/#job_experience" : "/#education";
 
-  if (
-    import.meta.env.DEV &&
-    experience.location &&
-    (!mapsApiKey || mapsApiKey.trim() === "")
-  ) {
+  const hasMapsKey = Boolean(mapsApiKey && mapsApiKey.trim() !== "");
+
+  if (experience.location && !hasMapsKey) {
     console.warn(
-      "[ExperienceDetailPage] VITE_GOOGLE_MAPS_API_KEY is not set; map is hidden."
+      "[ExperienceDetailPage] VITE_GOOGLE_MAPS_API_KEY is not set; showing the address link instead of the embedded map."
     );
   }
 
-  const showMap =
-    Boolean(experience.location) &&
-    Boolean(mapsApiKey && mapsApiKey.trim() !== "");
-
   const mapZoom = experience.location?.zoom ?? 15;
+  const mapsSearchUrl = experience.location
+    ? googleMapsSearchUrl(
+        resolveMapEmbedQuery(experience.location),
+        experience.location.address
+      )
+    : undefined;
 
   const aboutTitle = `About ${experience.organization}`;
   const contributionsTitle = `What I did at ${experience.organization}`;
@@ -184,7 +203,7 @@ export function ExperienceDetailPage() {
             </DetailSection>
           ) : null}
 
-          {showMap && experience.location && mapsApiKey ? (
+          {experience.location ? (
             <section className={cn("mt-10", sectionEnterClass("delay-150"))}>
               <h2 className="mb-3 text-lg font-semibold tracking-tight">
                 Location
@@ -192,22 +211,34 @@ export function ExperienceDetailPage() {
               <p className="mb-4 text-sm text-muted-foreground">
                 {experience.location.address}
               </p>
-              <div className="overflow-hidden rounded-xl border border-primary/15 bg-muted/25 shadow-sm">
-                <div className="relative aspect-[16/10] w-full bg-muted/40">
-                  <iframe
-                    title={`Map: ${experience.organization}`}
-                    src={googleMapsEmbedPlaceUrl(
-                      resolveMapEmbedQuery(experience.location),
-                      mapZoom,
-                      mapsApiKey
-                    )}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    className="absolute inset-0 h-full w-full border-0"
-                    allowFullScreen
-                  />
+              {hasMapsKey && mapsApiKey ? (
+                <div className="overflow-hidden rounded-xl border border-primary/15 bg-muted/25 shadow-sm">
+                  <div className="relative aspect-[16/10] w-full bg-muted/40">
+                    <iframe
+                      title={`Map: ${experience.organization}`}
+                      src={googleMapsEmbedPlaceUrl(
+                        resolveMapEmbedQuery(experience.location),
+                        mapZoom,
+                        mapsApiKey
+                      )}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="absolute inset-0 h-full w-full border-0"
+                      allowFullScreen
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <a
+                  href={mapsSearchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={backNavLinkClassName}
+                >
+                  <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
+                  Open in Google Maps
+                </a>
+              )}
             </section>
           ) : null}
 

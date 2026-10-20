@@ -26,7 +26,17 @@ jobs:
           node-version: "22"
           cache: npm
 
+      - name: Check Maps API key
+        env:
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
+        run: |
+          if [ -z "$VITE_GOOGLE_MAPS_API_KEY" ]; then
+            echo "::warning title=Maps API key missing::Repository secret VITE_GOOGLE_MAPS_API_KEY is not set, so experience pages show a Google Maps link instead of an embedded map."
+          fi
+
       - name: Install and build
+        env:
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
         run: |
           npm ci
           npm run build
